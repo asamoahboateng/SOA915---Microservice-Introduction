@@ -1,0 +1,26 @@
+name: email-notification
+
+services:
+  python-consumer:
+    build: .
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: admin
+      RABBITMQ_PASS: adminRabbit
+      RABBITMQ_VHOST: /
+      SMTP_HOST: smtp.elasticemail.com
+      SMTP_PORT: 2525
+      SMTP_USER: boatinc14@yahoo.com
+      SMTP_PASS: 66CC4AC0F12481FD76EBCED31EA0A8D2DBEC
+    volumes:
+      - ./:/app
+    networks:
+      - notification-network
+      - nginx-proxy
+
+networks:
+  notification-network:
+    driver: bridge
+  nginx-proxy:
+    external: true
