@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Jobs\SendInvoiceJob;
 
 class BookingController extends Controller
 {
@@ -51,6 +52,19 @@ class BookingController extends Controller
             'status' => 'pending'
         ]);
 
+        $bookingDetail = [
+            'client_name' => $booking->client_name,
+            'client_phone' => $booking->client_phone,
+            'client_email' => $booking->client_email,
+            'service_name' => $booking->service->name,
+            'service_cost' => $booking->service->price,
+            'service_id' => $booking->service->id,
+            'booking_uid' => $booking->uuid,
+            'notes' => $booking->notes,
+        ];
+
+        message_to_queue('invoice', $bookingDetail);
+
         return redirect()->route('booking.confirmation', $booking->uuid)
             ->with('success', 'Booking submitted successfully!');
     }
@@ -58,6 +72,21 @@ class BookingController extends Controller
     public function confirmation($booking)
     {
         $booking = Booking::where('uuid', $booking)->firstOrFail();
+
+        // $bookingDetail = [
+        //     'client_name' => $booking->client_name,
+        //     'client_phone' => $booking->client_phone,
+        //     'client_email' => $booking->client_email,
+        //     'service_name' => $booking->service->name,
+        //     'service_cost' => $booking->service->price,
+        //     'service_id' => $booking->service->id,
+        //     'booking_uid' => $booking->uuid,
+        //     'notes' => $booking->notes,
+        // ];
+
+        // message_to_queue('invoice', $bookingDetail);
+
+
         return view('bookings.confirmation', compact('booking'));
     }
 }

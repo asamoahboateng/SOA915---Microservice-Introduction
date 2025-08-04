@@ -8,9 +8,10 @@ use App\Services\RabbitMQPublisher;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/admin/login');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::prefix('api')->group(function () {
     Route::controller(ApiController::class)->group(function () {
