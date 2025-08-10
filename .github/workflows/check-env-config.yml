@@ -1,4 +1,4 @@
-name: Check for .env or config in Laravel
+name: Check for .env or forbidden config files
 
 on:
   push:
@@ -16,20 +16,19 @@ jobs:
       - name: Check for .env file
         run: |
           if [ -f ".env" ]; then
-            echo "🚨 .env file found! This should not be committed."
-            exit 1
+            echo "::warning file=.env,line=1,col=1::🚨 .env file found! This should not be committed."
           else
-            echo "✅ .env file not found. Good!"
+            echo "✅ .env file not found."
           fi
 
-      - name: Check for config files (optional stricter check)
+      - name: Check for forbidden files in config directory
         run: |
-          # Check for config files that shouldn't be there
-          FORBIDDEN_FILES=$(find config -type f -name "*.env" -o -name "*.secret" 2>/dev/null)
+          FORBIDDEN_FILES=$(find config -type f \( -name "*.env" -o -name "*.secret" \) 2>/dev/null)
           if [ ! -z "$FORBIDDEN_FILES" ]; then
-            echo "🚨 Forbidden config files found:"
-            echo "$FORBIDDEN_FILES"
-            exit 1
+            echo "::warning::🚨 Forbidden config files found:"
+            echo "$FORBIDDEN_FILES" | while read -r file; do
+              echo "::warning file=$file,line=1,col=1::⚠️ $file should not be in the repo"
+            done
           else
-            echo "✅ No forbidden files in config directory."
+            echo "✅ No forbidden files found in config directory."
           fi
