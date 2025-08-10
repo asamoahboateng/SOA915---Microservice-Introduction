@@ -1,0 +1,35 @@
+name: Check for .env or config in Laravel
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check for .env file
+        run: |
+          if [ -f ".env" ]; then
+            echo "🚨 .env file found! This should not be committed."
+            exit 1
+          else
+            echo "✅ .env file not found. Good!"
+          fi
+
+      - name: Check for config files (optional stricter check)
+        run: |
+          # Check for config files that shouldn't be there
+          FORBIDDEN_FILES=$(find config -type f -name "*.env" -o -name "*.secret" 2>/dev/null)
+          if [ ! -z "$FORBIDDEN_FILES" ]; then
+            echo "🚨 Forbidden config files found:"
+            echo "$FORBIDDEN_FILES"
+            exit 1
+          else
+            echo "✅ No forbidden files in config directory."
+          fi
