@@ -1,0 +1,50 @@
+name: nginxproxySSL
+#services:
+#  nginx-proxy:
+#    image: nginxproxy/nginx-proxy
+#    container_name: nginx-proxy
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    volumes:
+#      - /etc/nginx/vhost.d
+#      - /usr/share/nginx/html
+#      - ./certs:/etc/nginx/certs
+#      - /var/run/docker.sock:/tmp/docker.sock:ro
+#    networks:
+#      - nginx-proxy
+#
+#  acme-companion:
+#    image: nginxproxy/acme-companion
+#    container_name: nginx-acme
+#    environment:
+#      - DEFAULT_EMAIL=kwame@asamoahboateng.com # Change this!
+#    volumes:
+#      - ./certs:/etc/nginx/certs
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#      - ./data:/etc/nginx/vhost.d
+#      - ./data:/usr/share/nginx/html
+#    depends_on:
+#      - nginx-proxy
+#    networks:
+#      - nginx-proxy
+#
+#networks:
+#  nginx-proxy:
+#    external: true
+services:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs:ro  # point to your local certs
+    networks:
+      - nginx-proxy
+
+networks:
+  nginx-proxy:
+    external: true

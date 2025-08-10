@@ -1,0 +1,75 @@
+#ddev-generated
+# If you remove the ddev-generated line above you
+# are responsible for maintaining this file. DDEV will not then
+# update it, for example if you add `additional_hostnames`, etc.
+
+http:
+  routers:
+    soa-project-service-booking-web-80-http:
+      entrypoints:
+        - http-80
+      rule: Host(`soa-project-service-booking.ddev.site`)
+      
+      service: "soa-project-service-booking-web-80"
+      ruleSyntax: v3
+      tls: false
+      # middlewares:
+      #   - "soa-project-service-booking-redirectHttps"
+    soa-project-service-booking-xhgui-80-http:
+      entrypoints:
+        - http-8143
+      rule: Host(`soa-project-service-booking.ddev.site`)
+      
+      service: "soa-project-service-booking-xhgui-80"
+      ruleSyntax: v3
+      tls: false
+      # middlewares:
+      #   - "soa-project-service-booking-redirectHttps"
+    
+    
+    soa-project-service-booking-web-80-https:
+      entrypoints:
+        - http-443
+      rule: Host(`soa-project-service-booking.ddev.site`)
+      
+      service: "soa-project-service-booking-web-80"
+      ruleSyntax: v3
+      
+      tls:
+        certResolver: acme-tlsChallenge
+      
+    
+    soa-project-service-booking-xhgui-80-https:
+      entrypoints:
+        - http-8142
+      rule: Host(`soa-project-service-booking.ddev.site`)
+      
+      service: "soa-project-service-booking-xhgui-80"
+      ruleSyntax: v3
+      
+      tls:
+        certResolver: acme-tlsChallenge
+      
+    
+
+  middlewares:
+    soa-project-service-booking-redirectHttps:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+  services:
+    soa-project-service-booking-web-80:
+      loadbalancer:
+        servers:
+          - url: http://ddev-soa-project-service-booking-web:80
+        
+    
+    soa-project-service-booking-xhgui-80:
+      loadbalancer:
+        servers:
+          - url: http://ddev-soa-project-service-booking-xhgui:80
+        
+    
+    
+

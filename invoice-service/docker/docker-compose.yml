@@ -1,0 +1,49 @@
+name: ns-invoice-system
+services:
+  inv_app:
+    build: .
+    container_name: ins-app
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+    environment:
+      - VIRTUAL_HOST=invoice.nailtech.loc
+      - VIRTUAL_PORT=8000
+    volumes:
+      - ../:/var/www
+    networks:
+      - ins-network
+      - nginx-proxy
+
+  inv_queue_worker:
+    build: .
+    container_name: ins-app-queue-worker
+#    command: [ "sh", "-c", "sleep 30 && php artisan queue:work --sleep=3 --tries=3" ]
+    command: [ "sh", "-c", "sleep 30 && php artisan rabbitmq:consume-invoice" ]
+    depends_on:
+      - inv_app
+    volumes:
+      - ../:/var/www
+    networks:
+      - ins-network
+      - nginx-proxy
+
+  inv_mysql:
+    image: mysql:latest
+    container_name: ins-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - ins-network
+
+networks:
+  nginx-proxy:
+    external: true
+  ins-network:
+    driver: bridge
+
+volumes:
+  mysql-data:

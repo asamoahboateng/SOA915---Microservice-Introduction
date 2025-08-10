@@ -1,0 +1,25 @@
+name: main-website
+services:
+  mv_app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: mw-app
+#    command: tail -f /dev/null
+#    command: "npm start"
+    environment:
+      - VIRTUAL_HOST=nailtech.loc
+      - VIRTUAL_PORT=8000
+      - RABBIT_HOST=rabbitmq
+      - QUEUE_NAME=contact_queue
+    volumes:
+      - ../static:/app/static
+    networks:
+      - mw-network
+      - nginx-proxy
+
+networks:
+  nginx-proxy:
+    external: true
+  mw-network:
+    driver: bridge

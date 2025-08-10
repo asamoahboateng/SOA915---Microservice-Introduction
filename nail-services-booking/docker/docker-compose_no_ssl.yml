@@ -1,0 +1,34 @@
+services:
+  laravel:
+    build: .
+    container_name: usm-app
+    environment:
+      - VIRTUAL_HOST=users.nailtech.local
+      - VIRTUAL_PORT=8000
+    volumes:
+      - ../:/var/www
+    networks:
+      - nginx-proxy
+      - user-staff-manage-network
+
+  mysql:
+    image: mysql:8
+    container_name: laravel-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+    volumes:
+      - ./data/mysql-data:/var/lib/mysql
+    networks:
+      - user-staff-manage-network
+
+networks:
+  nginx-proxy:
+    external: true
+  user-staff-manage-network:
+    driver: bridge
+
+volumes:
+  mysql-data:

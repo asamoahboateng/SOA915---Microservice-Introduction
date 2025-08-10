@@ -1,0 +1,48 @@
+name: user-staff-manage
+services:
+  app:
+    build: .
+    container_name: usm-app
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+    environment:
+      - VIRTUAL_HOST=users.nailtech.loc
+      - VIRTUAL_PORT=8000
+    volumes:
+      - ../:/var/www
+    networks:
+      - user-staff-manage-network
+      - nginx-proxy
+
+  queue-worker:
+    build: .
+    container_name: usm-app-queue-worker
+    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3"]
+    depends_on:
+      - app
+    volumes:
+      - ../:/var/www
+    networks:
+      - user-staff-manage-network
+      - nginx-proxy
+
+  mysql:
+    image: mysql:latest
+    container_name: usm-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - user-staff-manage-network
+
+networks:
+  nginx-proxy:
+    external: true
+  user-staff-manage-network:
+    driver: bridge
+
+volumes:
+  mysql-data:

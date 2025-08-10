@@ -1,0 +1,28 @@
+name: nailtech-queue
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+#    ports:
+#      - "5672:5672"   # RabbitMQ (AMQP) client port
+#      - "15672:15672" # RabbitMQ Web UI
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: adminRabbit
+      VIRTUAL_HOST: rabbitmq.nailtech.loc
+      VIRTUAL_PORT: 15672
+    networks:
+      - rabbitmq-net
+      - nginx-proxy
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
+networks:
+  rabbitmq-net:
+    driver: bridge
+  nginx-proxy:
+    external: true
+
+volumes:
+  rabbitmq-data:
