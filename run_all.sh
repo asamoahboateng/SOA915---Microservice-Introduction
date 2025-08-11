@@ -4,7 +4,7 @@
 FOLDERS=("app-queue" "nginx-proxy" "user-staff-manage" "main-website" "email-notification" "invoice-service" "nail-services-booking")
 
 # Define the docker-compose command (can change to 'docker compose' if you're using v2 syntax)
-DOCKER_COMPOSE_COMMAND="docker-compose up -d"
+DOCKER_COMPOSE_COMMAND="docker compose up -d"
 
 # Loop through each folder
 for dir in "${FOLDERS[@]}"; do
