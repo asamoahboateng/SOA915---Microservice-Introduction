@@ -35,11 +35,16 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Copy existing app source
 COPY . /var/www
 
+# Run composer install (with --no-dev and optimized autoloader for production)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
 EXPOSE 8000
 
+
+CMD ["php-fpm"]
 # ENTRYPOINT ["php", "artisan"]
 
 # CMD ["serve", "--host=0.0.0.0", "--port=8000"]
