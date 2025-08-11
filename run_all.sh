@@ -1,4 +1,11 @@
 #!/bin/bash
+# Create the docker network if it doesn't already exist
+if ! docker network ls | grep -q nginx-proxy; then
+  echo "🌐 Creating docker network: nginx-proxy"
+  docker network create nginx-proxy
+else
+  echo "🌐 Docker network 'nginx-proxy' already exists"
+fi
 
 # List of your 4 target folders
 FOLDERS=("app-queue" "nginx-proxy" "user-staff-manage" "main-website" "email-notification" "invoice-service" "nail-services-booking")
