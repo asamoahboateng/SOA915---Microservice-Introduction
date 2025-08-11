@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # List of your 4 target folders
-FOLDERS=("folder1" "folder2" "folder3" "folder4")
+FOLDERS=("app-queue", "nginx-proxy", "user-staff-manage" ,"main-website", "email-notification", "invoice-service", "nail-services-booking")
 
 # Define the docker-compose command (can change to 'docker compose' if you're using v2 syntax)
 DOCKER_COMPOSE_COMMAND="docker-compose up -d"
