@@ -40,6 +40,14 @@ RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
 EXPOSE 8000
 
+COPY ../docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["entrypoint.sh"]
+
+
+CMD ["php-fpm"]
+
 # ENTRYPOINT ["php", "artisan"]
 
 # CMD ["serve", "--host=0.0.0.0", "--port=8000"]
