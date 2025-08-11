@@ -1,7 +1,9 @@
 name: nail-service-booking
 services:
   app:
-    build: .
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
     container_name: nsb-app
     command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
     environment:
@@ -14,7 +16,9 @@ services:
       - nginx-proxy
 
   queue-worker:
-    build: .
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
     container_name: nsb-app-queue-worker
     command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3"]
     depends_on:
