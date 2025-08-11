@@ -33,7 +33,7 @@ RUN apt-get update && apt-get install -y \
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Copy existing app source
-COPY . /var/www
+COPY ../ /var/www
 
 # Run composer install (with --no-dev and optimized autoloader for production)
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
@@ -42,6 +42,11 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-di
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
 EXPOSE 8000
+
+COPY ../docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["entrypoint.sh"]
 
 
 CMD ["php-fpm"]
